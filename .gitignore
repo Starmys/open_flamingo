@@ -141,3 +141,6 @@ wandb
 .pyre/
 
 __*.sh
+
+*.png
+*.pt

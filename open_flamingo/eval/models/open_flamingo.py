@@ -9,6 +9,8 @@ from open_flamingo.src.factory import create_model_and_transforms
 from open_flamingo.eval.utils import unwrap_model, get_autocast, get_cast_dtype
 from transformers.modeling_outputs import CausalLMOutputWithPast
 
+from quantize_linear import load_quant
+
 
 class EvalModel(BaseEvalModel):
     """OpenFlamingo model evaluation.
@@ -61,6 +63,16 @@ class EvalModel(BaseEvalModel):
         # autocast
         self.autocast = get_autocast(model_args["precision"])
         self.cast_dtype = get_cast_dtype(model_args["precision"])
+        self.model.lang_encoder.to(self.cast_dtype)
+
+        # import ipdb; ipdb.set_trace()
+        if "quant_checkpoint" in model_args:
+            quant_args = {
+                k: model_args[k]
+                for k in ['quant_checkpoint', 'w_bits', 'a_bits', 'smooth_checkpoint', 'ignore_layers', 'ignore_components']
+                if k in model_args
+            }
+            self.model.lang_encoder = load_quant(self.model.lang_encoder, **quant_args)
 
     def _prepare_images(self, batch: List[List[Image.Image]]) -> torch.Tensor:
         """
@@ -84,9 +96,7 @@ class EvalModel(BaseEvalModel):
                     )
                 batch_images[iexample, iimage, 0] = preprocessed
         if batch_images is not None:
-            batch_images = batch_images.to(
-                self.device, dtype=self.cast_dtype, non_blocking=True
-            )
+            batch_images = batch_images.to(self.device, self.cast_dtype, non_blocking=True)
         return batch_images
 
     def _prepare_text(
@@ -114,11 +124,9 @@ class EvalModel(BaseEvalModel):
             max_length=max_length,
         )
         input_ids, attention_mask = encodings["input_ids"], encodings["attention_mask"]
-        input_ids = input_ids.to(self.device, dtype=self.cast_dtype, non_blocking=True)
-        attention_mask = attention_mask.to(
-            self.device, dtype=self.cast_dtype, non_blocking=True
-        )
-        return input_ids, attention_mask.bool()
+        input_ids = input_ids.to(self.device, non_blocking=True)
+        attention_mask = attention_mask.to(self.device, dtype=torch.bool, non_blocking=True)
+        return input_ids, attention_mask
 
     def get_outputs(
         self,
@@ -145,6 +153,7 @@ class EvalModel(BaseEvalModel):
                     max_new_tokens=max_generation_length,
                     num_beams=num_beams,
                     length_penalty=length_penalty,
+                    pad_token_id=self.tokenizer.eos_token_id,
                 )
 
         # Extract only the new gnerated tokens

@@ -417,6 +417,12 @@ class VQAEval:
                 ansDic["answer"] = self.processPunctuation(ansDic["answer"])
                 ansDic["answer"] = self.processDigitArticle(ansDic["answer"])
 
+            # avgGTAcc = 0.0
+            # for gtAnsDatum in gts[quesId]["answers"]:
+            #     if gtAnsDatum["answer"] in resAns:
+            #         avgGTAcc = 1.0
+            #         break
+
             for gtAnsDatum in gts[quesId]["answers"]:
                 otherGTAns = [
                     item for item in gts[quesId]["answers"] if item != gtAnsDatum
@@ -424,11 +430,12 @@ class VQAEval:
                 matchingAns = [item for item in otherGTAns if item["answer"] == resAns]
                 acc = min(1, float(len(matchingAns)) / 3)
                 gtAcc.append(acc)
+            avgGTAcc = float(sum(gtAcc)) / len(gtAcc)
+
             quesType = gts[quesId]["question_type"]
             ansType = (
                 gts[quesId]["answer_type"] if "answer_type" in gts[quesId] else "other"
             )
-            avgGTAcc = float(sum(gtAcc)) / len(gtAcc)
             accQA.append(avgGTAcc)
             if quesType not in accQuesType:
                 accQuesType[quesType] = []

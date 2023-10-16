@@ -293,25 +293,25 @@ parser.add_argument(
     "--vizwiz_train_questions_json_path",
     type=str,
     help="Path to the vizwiz questions json file.",
-    default=None,
+    default="open_flamingo/eval/data/vizwiz/train_questions_vqa_format.json",
 )
 parser.add_argument(
     "--vizwiz_train_annotations_json_path",
     type=str,
     help="Path to the vizwiz annotations json file.",
-    default=None,
+    default="open_flamingo/eval/data/vizwiz/train_annotations_vqa_format.json",
 )
 parser.add_argument(
     "--vizwiz_test_questions_json_path",
     type=str,
     help="Path to the vizwiz questions json file.",
-    default=None,
+    default="open_flamingo/eval/data/vizwiz/val_questions_vqa_format.json",
 )
 parser.add_argument(
     "--vizwiz_test_annotations_json_path",
     type=str,
     help="Path to the vizwiz annotations json file.",
-    default=None,
+    default="open_flamingo/eval/data/vizwiz/val_annotations_vqa_format.json",
 )
 
 # TextVQA Dataset
@@ -325,25 +325,25 @@ parser.add_argument(
     "--textvqa_train_questions_json_path",
     type=str,
     help="Path to the textvqa questions json file.",
-    default=None,
+    default="open_flamingo/eval/data/textvqa/train_questions_vqa_format.json",
 )
 parser.add_argument(
     "--textvqa_train_annotations_json_path",
     type=str,
     help="Path to the textvqa annotations json file.",
-    default=None,
+    default="open_flamingo/eval/data/textvqa/train_annotations_vqa_format.json",
 )
 parser.add_argument(
     "--textvqa_test_questions_json_path",
     type=str,
     help="Path to the textvqa questions json file.",
-    default=None,
+    default="open_flamingo/eval/data/textvqa/val_questions_vqa_format.json",
 )
 parser.add_argument(
     "--textvqa_test_annotations_json_path",
     type=str,
     help="Path to the textvqa annotations json file.",
-    default=None,
+    default="open_flamingo/eval/data/textvqa/val_annotations_vqa_format.json",
 )
 
 ## Imagenet dataset
@@ -722,7 +722,7 @@ def main():
 
     if args.rank == 0 and args.results_file is not None:
         with open(args.results_file, "w") as f:
-            json.dump(results, f)
+            f.write(json.dumps(results, indent=4))
 
 
 def evaluate_captioning(
@@ -901,7 +901,7 @@ def evaluate_vqa(
     eval_model: BaseEvalModel,
     seed: int = 42,
     min_generation_length: int = 0,
-    max_generation_length: int = 5,
+    max_generation_length: int = 10,
     num_beams: int = 3,
     length_penalty: float = 0.0,
     num_shots: int = 8,

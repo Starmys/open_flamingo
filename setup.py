@@ -37,7 +37,7 @@ if __name__ == "__main__":
 
     setup(
         name="open_flamingo",
-        packages=find_packages(),
+        packages=find_packages("./open_flamingo/*"),
         include_package_data=True,
         version="2.0.0",
         license="MIT",
