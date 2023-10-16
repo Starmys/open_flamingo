@@ -36,6 +36,41 @@ or to create a conda environment for running OpenFlamingo, run
 conda env create -f environment.yml
 ```
 
+To install training or eval dependencies, run one of the first two commands. To install everything, run the third command.
+```
+pip install open-flamingo[training]
+pip install open-flamingo[eval]
+pip install open-flamingo[all]
+```
+
+There are three `requirements.txt` files: 
+- `requirements.txt` 
+- `requirements-training.txt`
+- `requirements-eval.txt`
+
+Depending on your use case, you can install any of these with `pip install -r <requirements-file.txt>`. The base file contains only the dependencies needed for running the model.
+
+## Development
+
+We use pre-commit hooks to align formatting with the checks in the repository. 
+1. To install pre-commit, run
+    ```
+    pip install pre-commit
+    ```
+    or use brew for MacOS
+    ```
+    brew install pre-commit
+    ```
+2. Check the version installed with
+    ```
+    pre-commit --version
+    ```
+3. Then at the root of this repository, run
+    ```
+    pre-commit install
+    ```
+Then every time we run git commit, the checks are run. If the files are reformatted by the hooks, run `git add` for your changed files and `git commit` again
+
 # Approach
 OpenFlamingo is a multimodal language model that can be used for a variety of tasks. It is trained on a large multimodal dataset (e.g. Multimodal C4) and can be used to generate text conditioned on interleaved images/text. For example, OpenFlamingo can be used to generate a caption for an image, or to generate a question given an image and a text passage. The benefit of this approach is that we are able to rapidly adapt to new tasks using in-context learning.
 
@@ -58,7 +93,8 @@ model, image_processor, tokenizer = create_model_and_transforms(
     clip_vision_encoder_pretrained="openai",
     lang_encoder_path="anas-awadalla/mpt-1b-redpajama-200b",
     tokenizer_path="anas-awadalla/mpt-1b-redpajama-200b",
-    cross_attn_every_n_layers=1
+    cross_attn_every_n_layers=1,
+    cache_dir="PATH/TO/CACHE/DIR"  # Defaults to ~/.cache
 )
 ```
 
@@ -67,11 +103,11 @@ We have trained the following OpenFlamingo models so far.
 
 |# params|Language model|Vision encoder|Xattn interval*|COCO 4-shot CIDEr|VQAv2 4-shot Accuracy|Weights|
 |------------|--------------|--------------|----------|-----------|-------|----|
-|3B| mosaicml/mpt-1b-redpajama-200b | openai CLIP ViT-L/14 | 1 | 77.3 | 45.8 |[Link](https://huggingface.co/openflamingo/OpenFlamingo-3B-vitl-mpt1b)|
-|3B| mosaicml/mpt-1b-redpajama-200b-dolly | openai CLIP ViT-L/14 | 1 | 82.7 | 45.7 |[Link](https://huggingface.co/openflamingo/OpenFlamingo-3B-vitl-mpt1b-langinstruct)|
+|3B| anas-awadalla/mpt-1b-redpajama-200b | openai CLIP ViT-L/14 | 1 | 77.3 | 45.8 |[Link](https://huggingface.co/openflamingo/OpenFlamingo-3B-vitl-mpt1b)|
+|3B| anas-awadalla/mpt-1b-redpajama-200b-dolly | openai CLIP ViT-L/14 | 1 | 82.7 | 45.7 |[Link](https://huggingface.co/openflamingo/OpenFlamingo-3B-vitl-mpt1b-langinstruct)|
 |4B| togethercomputer/RedPajama-INCITE-Base-3B-v1 | openai CLIP ViT-L/14 | 2 | 81.8 | 49.0 | [Link](https://huggingface.co/openflamingo/OpenFlamingo-4B-vitl-rpj3b)|
 |4B| togethercomputer/RedPajama-INCITE-Instruct-3B-v1 | openai CLIP ViT-L/14 | 2 | 85.8 | 49.0 | [Link](https://huggingface.co/openflamingo/OpenFlamingo-4B-vitl-rpj3b-langinstruct)|
-|9B| mosaicml/mpt-7b | openai CLIP ViT-L/14 | 4 | 89.0 | 54.8 | [Link](https://huggingface.co/openflamingo/OpenFlamingo-9B-vitl-mpt7b)|
+|9B| anas-awadalla/mpt-7b | openai CLIP ViT-L/14 | 4 | 89.0 | 54.8 | [Link](https://huggingface.co/openflamingo/OpenFlamingo-9B-vitl-mpt7b)|
 
 *\* Xattn interval refers to the `--cross_attn_every_n_layers` argument.*
 

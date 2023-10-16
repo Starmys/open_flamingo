@@ -102,7 +102,6 @@ def train_one_epoch(
         # set up labels; language model is expected to handle shifting
         labels = input_ids.clone()
         labels[labels == tokenizer.pad_token_id] = -100
-        labels[labels == tokenizer.eos_token] = -100
         labels[labels == media_token_id] = -100
         labels = labels.to(device_id)
 
@@ -127,7 +126,6 @@ def train_one_epoch(
         # set up labels; language model is expected to handle shifting
         labels = input_ids.clone()
         labels[labels == tokenizer.pad_token_id] = -100
-        labels[labels == tokenizer.eos_token] = -100
         for i in range(labels.shape[0]):
             # remove loss for any token before the first <image> token
             label_idx = 0
@@ -155,8 +153,8 @@ def train_one_epoch(
         with autocast():
             loss_mmc4 = model(
                 vision_x=images,
-                lang_x=input_ids,
-                attention_mask=attention_mask,
+                lang_x=input_ids.to(device_id),
+                attention_mask=attention_mask.to(device_id),
                 labels=labels,
             )[0]
 
