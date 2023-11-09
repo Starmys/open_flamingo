@@ -25,8 +25,9 @@ python open_flamingo/eval/evaluate.py \
     --model llava \
     --model_base none \
     --model_path /home/chengzhang/models/llava/llava-v1.5-7b \
-    --results_file "/home/chengzhang/Multimodal-Quantization/evaluation/LLaVA/results-1.5-w16a16-textvqa.json" \
+    --results_file "/home/chengzhang/Multimodal-Quantization/evaluation/LLaVA/tmp-3.1.json" \
     --precision fp16 \
+    --quant_args quant_checkpoint="/home/chengzhang/Multimodal-Quantization/GPTQ-for-LLaMa/models/llava-1.5-7b-textvqa-4bit.pt",w_bits=4,a_bits=4,act_quant_func="symmetric_cbrt",act_quant_dim=1,act_token_split=1,outliers_thres=3 \
     --batch_size 8 \
     --shots 0 \
     --eval_ok_vqa \
@@ -35,97 +36,30 @@ python open_flamingo/eval/evaluate.py \
     --ok_vqa_train_questions_json_path "/home/chengzhang/datasets/OK-VQA/question/OpenEnded_mscoco_train2014_questions.json" \
     --ok_vqa_test_image_dir_path "/home/chengzhang/datasets/OK-VQA/images/val2014" \
     --ok_vqa_test_annotations_json_path "/home/chengzhang/datasets/OK-VQA/annotation/mscoco_val2014_annotations.json" \
-    --ok_vqa_test_questions_json_path "/home/chengzhang/datasets/OK-VQA/question/OpenEnded_mscoco_val2014_questions.json" \
-    --eval_textvqa \
-    --textvqa_image_dir_path "/home/chengzhang/datasets/TextVQA/images/train_images"
+    --ok_vqa_test_questions_json_path "/home/chengzhang/datasets/OK-VQA/question/OpenEnded_mscoco_val2014_questions.json"
 
-# python open_flamingo/eval/evaluate.py \
-#     --model llava \
-#     --model_base /home/chengzhang/models/llava/llava-v1-0719-336px-lora-merge-vicuna-13b-v1.3 \
-#     --model_path /home/chengzhang/models/llava/llava-336px-pretrain-vicuna-13b-v1.3 \
-#     --results_file "/home/chengzhang/Multimodal-Quantization/evaluation/LLaVA/results-proj-w4a8-textvqa.json" \
-#     --precision fp16 \
-#     --quant_checkpoint /home/chengzhang/Multimodal-Quantization/GPTQ-for-LLaMa/models/llava-viquna-13b-textvqa-4bit.pt \
-#     --quant_wbits 4 \
-#     --quant_abits 8 \
-#     --batch_size 4 \
-#     --shots 0 \
-#     --eval_ok_vqa \
-#     --ok_vqa_train_image_dir_path "/home/chengzhang/datasets/OK-VQA/images/train2014" \
-#     --ok_vqa_train_annotations_json_path "/home/chengzhang/datasets/OK-VQA/annotation/mscoco_train2014_annotations.json" \
-#     --ok_vqa_train_questions_json_path "/home/chengzhang/datasets/OK-VQA/question/OpenEnded_mscoco_train2014_questions.json" \
-#     --ok_vqa_test_image_dir_path "/home/chengzhang/datasets/OK-VQA/images/val2014" \
-#     --ok_vqa_test_annotations_json_path "/home/chengzhang/datasets/OK-VQA/annotation/mscoco_val2014_annotations.json" \
-#     --ok_vqa_test_questions_json_path "/home/chengzhang/datasets/OK-VQA/question/OpenEnded_mscoco_val2014_questions.json" \
-#     --eval_textvqa \
-#     --textvqa_image_dir_path "/home/chengzhang/datasets/TextVQA/images/train_images"
-
-# python open_flamingo/eval/evaluate.py \
-#     --model llava \
-#     --model_base /home/chengzhang/models/llava/llava-v1-0719-336px-lora-merge-vicuna-13b-v1.3 \
-#     --model_path /home/chengzhang/models/llava/llava-336px-pretrain-vicuna-13b-v1.3 \
-#     --results_file "/home/chengzhang/Multimodal-Quantization/evaluation/LLaVA/results-proj-w4a16-textvqa.json" \
-#     --precision fp16 \
-#     --quant_checkpoint /home/chengzhang/Multimodal-Quantization/GPTQ-for-LLaMa/models/llava-viquna-13b-textvqa-4bit.pt \
-#     --quant_wbits 4 \
-#     --quant_abits 32 \
-#     --batch_size 4 \
-#     --shots 0 \
-#     --eval_ok_vqa \
-#     --ok_vqa_train_image_dir_path "/home/chengzhang/datasets/OK-VQA/images/train2014" \
-#     --ok_vqa_train_annotations_json_path "/home/chengzhang/datasets/OK-VQA/annotation/mscoco_train2014_annotations.json" \
-#     --ok_vqa_train_questions_json_path "/home/chengzhang/datasets/OK-VQA/question/OpenEnded_mscoco_train2014_questions.json" \
-#     --ok_vqa_test_image_dir_path "/home/chengzhang/datasets/OK-VQA/images/val2014" \
-#     --ok_vqa_test_annotations_json_path "/home/chengzhang/datasets/OK-VQA/annotation/mscoco_val2014_annotations.json" \
-#     --ok_vqa_test_questions_json_path "/home/chengzhang/datasets/OK-VQA/question/OpenEnded_mscoco_val2014_questions.json" \
-#     --eval_textvqa \
-#     --textvqa_image_dir_path "/home/chengzhang/datasets/TextVQA/images/train_images"
-
-# python open_flamingo/eval/evaluate.py \
-#     --model llava \
-#     --model_base /home/chengzhang/models/llava/llava-v1-0719-336px-lora-merge-vicuna-13b-v1.3 \
-#     --model_path /home/chengzhang/models/llava/llava-336px-pretrain-vicuna-13b-v1.3 \
-#     --results_file "/home/chengzhang/Multimodal-Quantization/evaluation/LLaVA/results-proj-w8a4.json" \
-#     --precision fp16 \
-#     --quant_checkpoint /home/chengzhang/Multimodal-Quantization/GPTQ-for-LLaMa/models/llava-viquna-13b-8bit.pt \
-#     --quant_wbits 8 \
-#     --quant_abits 4 \
-#     --batch_size 4 \
-#     --shots 0 \
-#     --eval_ok_vqa \
-#     --ok_vqa_train_image_dir_path "/home/chengzhang/datasets/OK-VQA/images/train2014" \
-#     --ok_vqa_train_annotations_json_path "/home/chengzhang/datasets/OK-VQA/annotation/mscoco_train2014_annotations.json" \
-#     --ok_vqa_train_questions_json_path "/home/chengzhang/datasets/OK-VQA/question/OpenEnded_mscoco_train2014_questions.json" \
-#     --ok_vqa_test_image_dir_path "/home/chengzhang/datasets/OK-VQA/images/val2014" \
-#     --ok_vqa_test_annotations_json_path "/home/chengzhang/datasets/OK-VQA/annotation/mscoco_val2014_annotations.json" \
-#     --ok_vqa_test_questions_json_path "/home/chengzhang/datasets/OK-VQA/question/OpenEnded_mscoco_val2014_questions.json" \
-#     --eval_textvqa \
-#     --textvqa_image_dir_path "/home/chengzhang/datasets/TextVQA/images/train_images"
-
-# python open_flamingo/eval/evaluate.py \
-#     --model llava \
-#     --model_base /home/chengzhang/models/llava/llava-v1-0719-336px-lora-merge-vicuna-13b-v1.3 \
-#     --model_path /home/chengzhang/models/llava/llava-336px-pretrain-vicuna-13b-v1.3 \
-#     --results_file "/home/chengzhang/Multimodal-Quantization/evaluation/LLaVA/results-proj-w4a4.json" \
-#     --precision fp16 \
-#     --quant_checkpoint /home/chengzhang/Multimodal-Quantization/GPTQ-for-LLaMa/models/llava-viquna-13b-4bit.pt \
-#     --quant_wbits 4 \
-#     --quant_abits 4 \
-#     --batch_size 4 \
-#     --shots 0 \
-#     --eval_ok_vqa \
-#     --ok_vqa_train_image_dir_path "/home/chengzhang/datasets/OK-VQA/images/train2014" \
-#     --ok_vqa_train_annotations_json_path "/home/chengzhang/datasets/OK-VQA/annotation/mscoco_train2014_annotations.json" \
-#     --ok_vqa_train_questions_json_path "/home/chengzhang/datasets/OK-VQA/question/OpenEnded_mscoco_train2014_questions.json" \
-#     --ok_vqa_test_image_dir_path "/home/chengzhang/datasets/OK-VQA/images/val2014" \
-#     --ok_vqa_test_annotations_json_path "/home/chengzhang/datasets/OK-VQA/annotation/mscoco_val2014_annotations.json" \
-#     --ok_vqa_test_questions_json_path "/home/chengzhang/datasets/OK-VQA/question/OpenEnded_mscoco_val2014_questions.json" \
-#     --eval_textvqa \
-#     --textvqa_image_dir_path "/home/chengzhang/datasets/TextVQA/images/train_images"
-#     # --eval_vqav2 \
-#     # --vqav2_train_image_dir_path "/home/chengzhang/datasets/OK-VQA/image/train2014" \
-#     # --vqav2_train_annotations_json_path "/home/chengzhang/datasets/VQAv2/annotation/v2_mscoco_train2014_annotations.json" \
-#     # --vqav2_train_questions_json_path "/home/chengzhang/datasets/VQAv2/question/v2_OpenEnded_mscoco_train2014_questions.json" \
-#     # --vqav2_test_image_dir_path "/home/chengzhang/datasets/OK-VQA/image/val2014" \
-#     # --vqav2_test_annotations_json_path "/home/chengzhang/datasets/VQAv2/annotation/v2_mscoco_val2014_annotations.json" \
-#     # --vqav2_test_questions_json_path "/home/chengzhang/datasets/VQAv2/question/v2_OpenEnded_mscoco_val2014_questions.json" \
+python open_flamingo/eval/evaluate.py \
+    --model llava \
+    --model_base none \
+    --model_path /home/chengzhang/models/llava/llava-v1.5-7b \
+    --results_file "/home/chengzhang/Multimodal-Quantization/evaluation/LLaVA/tmp-3.0.json" \
+    --precision fp16 \
+    --quant_args quant_checkpoint="/home/chengzhang/Multimodal-Quantization/GPTQ-for-LLaMa/models/llava-1.5-7b-textvqa-4bit.pt",w_bits=4,a_bits=4,act_quant_func="symmetric_cbrt",act_quant_dim=1,act_token_split=0,outliers_thres=3 \
+    --batch_size 8 \
+    --shots 0 \
+    --eval_ok_vqa \
+    --ok_vqa_train_image_dir_path "/home/chengzhang/datasets/OK-VQA/images/train2014" \
+    --ok_vqa_train_annotations_json_path "/home/chengzhang/datasets/OK-VQA/annotation/mscoco_train2014_annotations.json" \
+    --ok_vqa_train_questions_json_path "/home/chengzhang/datasets/OK-VQA/question/OpenEnded_mscoco_train2014_questions.json" \
+    --ok_vqa_test_image_dir_path "/home/chengzhang/datasets/OK-VQA/images/val2014" \
+    --ok_vqa_test_annotations_json_path "/home/chengzhang/datasets/OK-VQA/annotation/mscoco_val2014_annotations.json" \
+    --ok_vqa_test_questions_json_path "/home/chengzhang/datasets/OK-VQA/question/OpenEnded_mscoco_val2014_questions.json"
+    # --eval_textvqa \
+    # --textvqa_image_dir_path "/home/chengzhang/datasets/TextVQA/images/train_images"
+    # --eval_vqav2 \
+    # --vqav2_train_image_dir_path "/home/chengzhang/datasets/OK-VQA/image/train2014" \
+    # --vqav2_train_annotations_json_path "/home/chengzhang/datasets/VQAv2/annotation/v2_mscoco_train2014_annotations.json" \
+    # --vqav2_train_questions_json_path "/home/chengzhang/datasets/VQAv2/question/v2_OpenEnded_mscoco_train2014_questions.json" \
+    # --vqav2_test_image_dir_path "/home/chengzhang/datasets/OK-VQA/image/val2014" \
+    # --vqav2_test_annotations_json_path "/home/chengzhang/datasets/VQAv2/annotation/v2_mscoco_val2014_annotations.json" \
+    # --vqav2_test_questions_json_path "/home/chengzhang/datasets/VQAv2/question/v2_OpenEnded_mscoco_val2014_questions.json" \

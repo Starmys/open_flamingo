@@ -66,13 +66,10 @@ class EvalModel(BaseEvalModel):
         self.model.lang_encoder.to(self.cast_dtype)
 
         # import ipdb; ipdb.set_trace()
-        if "quant_checkpoint" in model_args:
-            quant_args = {
-                k: model_args[k]
-                for k in ['quant_checkpoint', 'w_bits', 'a_bits', 'smooth_checkpoint', 'ignore_layers', 'ignore_components']
-                if k in model_args
-            }
-            self.model.lang_encoder = load_quant(self.model.lang_encoder, **quant_args)
+        if "quant_args" in model_args:
+            quant_args = {k: v for k, v in [x.split('=') for x in model_args['quant_args'].replace('"', '').split(',')]}
+            print(f'[Quant Args] {quant_args}')
+            self.model = load_quant(self.model, **quant_args)
 
     def _prepare_images(self, batch: List[List[Image.Image]]) -> torch.Tensor:
         """

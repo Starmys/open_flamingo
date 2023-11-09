@@ -50,16 +50,10 @@ class EvalModel(BaseEvalModel):
         stop_words_ids = [torch.tensor([869]).cuda()]  # '.'
         self.stopping_criteria = StoppingCriteriaList([StoppingCriteriaSub(stops=stop_words_ids)])
 
-        if "quant_checkpoint" in model_args:
-            if "smooth_checkpoint" not in model_args:
-                model_args["smooth_checkpoint"] = None
-            self.model.llama_model = load_quant(
-                self.model.llama_model,
-                model_args["quant_checkpoint"],
-                model_args["quant_wbits"],
-                model_args["quant_abits"],
-                model_args["smooth_checkpoint"],
-            )
+        if "quant_args" in model_args:
+            quant_args = {k: v for k, v in [x.split('=') for x in model_args['quant_args'].replace('"', '').split(',')]}
+            print(f'[Quant Args] {quant_args}')
+            self.model = load_quant(self.model, **quant_args)
 
     def get_outputs(
         self,

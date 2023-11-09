@@ -33,16 +33,10 @@ class EvalModel(BaseEvalModel):
         self.model.model.requires_grad_(True)
 
         # import ipdb; ipdb.set_trace()
-        if "quant_checkpoint" in model_args:
-            if "smooth_checkpoint" not in model_args:
-                model_args["smooth_checkpoint"] = None
-            self.model = load_quant(
-                self.model,
-                model_args["quant_checkpoint"],
-                int(model_args["quant_wbits"]),
-                int(model_args["quant_abits"]),
-                model_args["smooth_checkpoint"],
-            )
+        if "quant_args" in model_args:
+            quant_args = {k: v for k, v in [x.split('=') for x in model_args['quant_args'].replace('"', '').split(',')]}
+            print(f'[Quant Args] {quant_args}')
+            self.model = load_quant(self.model, **quant_args)
 
     def get_outputs(
         self,
@@ -65,6 +59,7 @@ class EvalModel(BaseEvalModel):
             tokenizer_image_token(text, self.tokenizer, IMAGE_TOKEN_INDEX)
             for text in batch_text
         ]
+        # print(input_ids)
         max_len = max(len(seq) for seq in input_ids)
         input_ids = [
             [self.tokenizer.pad_token_id] * (max_len - len(seq)) + seq
