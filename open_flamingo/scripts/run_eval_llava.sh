@@ -25,26 +25,9 @@ python open_flamingo/eval/evaluate.py \
     --model llava \
     --model_base none \
     --model_path /home/chengzhang/models/llava/llava-v1.5-7b \
-    --results_file "/home/chengzhang/Multimodal-Quantization/evaluation/LLaVA/tmp-3.1.json" \
+    --results_file "/home/chengzhang/Multimodal-Quantization/evaluation/LLaVA/tmp-lut.json" \
     --precision fp16 \
-    --quant_args quant_checkpoint="/home/chengzhang/Multimodal-Quantization/GPTQ-for-LLaMa/models/llava-1.5-7b-textvqa-4bit.pt",w_bits=4,a_bits=4,act_quant_func="symmetric_cbrt",act_quant_dim=1,act_token_split=1,outliers_thres=3 \
-    --batch_size 8 \
-    --shots 0 \
-    --eval_ok_vqa \
-    --ok_vqa_train_image_dir_path "/home/chengzhang/datasets/OK-VQA/images/train2014" \
-    --ok_vqa_train_annotations_json_path "/home/chengzhang/datasets/OK-VQA/annotation/mscoco_train2014_annotations.json" \
-    --ok_vqa_train_questions_json_path "/home/chengzhang/datasets/OK-VQA/question/OpenEnded_mscoco_train2014_questions.json" \
-    --ok_vqa_test_image_dir_path "/home/chengzhang/datasets/OK-VQA/images/val2014" \
-    --ok_vqa_test_annotations_json_path "/home/chengzhang/datasets/OK-VQA/annotation/mscoco_val2014_annotations.json" \
-    --ok_vqa_test_questions_json_path "/home/chengzhang/datasets/OK-VQA/question/OpenEnded_mscoco_val2014_questions.json"
-
-python open_flamingo/eval/evaluate.py \
-    --model llava \
-    --model_base none \
-    --model_path /home/chengzhang/models/llava/llava-v1.5-7b \
-    --results_file "/home/chengzhang/Multimodal-Quantization/evaluation/LLaVA/tmp-3.0.json" \
-    --precision fp16 \
-    --quant_args quant_checkpoint="/home/chengzhang/Multimodal-Quantization/GPTQ-for-LLaMa/models/llava-1.5-7b-textvqa-4bit.pt",w_bits=4,a_bits=4,act_quant_func="symmetric_cbrt",act_quant_dim=1,act_token_split=0,outliers_thres=3 \
+    --quant_args quant_checkpoint="/home/chengzhang/Multimodal-Quantization/GPTQ-for-LLaMa/models/llava-1.5-7b-textvqa-4bit.pt",w_bits=4,a_bits=4,act_quant_func="lut",act_quant_dim=1,act_token_split=1,outliers_thres=2 \
     --batch_size 8 \
     --shots 0 \
     --eval_ok_vqa \
