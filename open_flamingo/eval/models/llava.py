@@ -71,13 +71,15 @@ class EvalModel(BaseEvalModel):
             output_ids = model.generate(
                 input_ids,
                 images=batch_images,
-                do_sample=True,
-                # temperature=0.0,
+                do_sample=False,
+                temperature=0.0,
                 min_length=min_generation_length,
+                min_new_tokens=min_generation_length,
                 max_new_tokens=max_generation_length,
                 num_beams=num_beams,
                 length_penalty=length_penalty,
                 use_cache=True,
+                pad_token_id=self.tokenizer.eos_token_id,
                 # stopping_criteria=self.stopping_criteria,
             )
 
